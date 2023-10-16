@@ -82,6 +82,9 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 case "all":
                     regexParts.push("\u0020");
                     break;
+                case "between":
+                    regexParts.push("(?<=\S)[\u0020]{2,}(?=\S)");
+                    break;
                 case "boundary":
                     regexParts.push("\u0020(?=[ \t]*$)");
                     regexParts.push("(?<=^[ \t]*)\u0020");
@@ -90,6 +93,21 @@ export const activate = (context: vscode.ExtensionContext): void => {
                     regexParts.push("\u0020(?=[ \t]*$)");
                     break;
             }
+        }
+        if (config.get<boolean>('numeric.enable', false)) {
+            const numericColor = config.get<string>('numeric.color', "rgb(255, 0, 0, 1)");
+            // for Space (U+0020)
+            const decoSpace = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: config.get<string>('space.text', "\u2022"),
+                    // contentText: config.get<string>('space.text', "\u00b7"),
+                    color: numericColor,
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u0020", decoSpace);
+            regexParts.push("(?<=\S)[\u0020]{2,}(?=\S)"); // match between
         }
         if (config.get<boolean>('nbsp.enable', true)) {
             // for No-Break Space (U+00A0)
