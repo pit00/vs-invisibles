@@ -44,78 +44,24 @@ export const activate = (context: vscode.ExtensionContext): void => {
             regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020(?=[^\u0020\t\r\n\f])");
         }
         if (config.get<boolean>('multiple.enable', false)) {
-            const decoSpace2 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            const decoSpace3 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            const decoSpace4 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.OpenOpen,
-            });
-            const decoSpace5 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄₅",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.OpenClosed,
-            });
-            const decoSpace6 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄₅₆",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedOpen,
-            });
-            const decoSpace7 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄₅₆₇",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            const decoSpace8 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄₅₆₇₈",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            const decoSpace9 = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "₁₂₃₄₅₆₇₈₉",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            decoTypeMap.set("\u0020\u0020", decoSpace2);
-            decoTypeMap.set("\u0020\u0020\u0020", decoSpace3);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020", decoSpace4);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020\u0020", decoSpace5);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020\u0020\u0020", decoSpace6);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020\u0020\u0020\u0020", decoSpace7);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020", decoSpace8);
-            decoTypeMap.set("\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020", decoSpace9);
+            let match = "\u0020";
+            let deco = "₁";
+            let decoN = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];
+            let decoD = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰"];
+            
+            for (let index = 2; index <= 100; index++) {
+                // console.log(index)
+                match = match + "\u0020";
+                
+                if(index % 10 == 0){
+                    deco = deco + decoD[index / 10]
+                }
+                else{
+                    deco = deco + decoN[index % 10]
+                }
+                
+                decoTypeMap.set(match, vscode.window.createTextEditorDecorationType({rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed, before: {width: "0", color: color, contentText: deco}}))
+            }
             regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020{2,}(?=[^\u0020\t\r\n\f])");
             // \S not works... == [^\u0020\t\r\n\f]
         }
@@ -130,6 +76,36 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
             });
             decoTypeMap.set("eof", decoEof);
+        }
+        if (config.get<boolean>('extra.enable', true)) {
+            // for Carriage Return (U+000D)
+            const decoCR = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "1",
+                    contentText: "←",
+                    color: color,
+                    backgroundColor: "#80cc4018",
+                    border: "1px solid #80cc40"
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
+            });
+            decoTypeMap.set("\u000d", decoCR);
+            regexParts.push("\u000d");
+            
+            // for Horizontal Tabulation (U+0009)
+            const decoTab = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "--->",
+                    color: color,
+                },
+                backgroundColor: "#80cc4018",
+                borderRadius: "3px",
+                border: "1px solid #80cc40",
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
+            });
+            decoTypeMap.set("\u0009", decoTab);
+            regexParts.push("\u0009");
         }
         context.subscriptions.push(...decoTypeMap.values());
     };

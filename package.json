@@ -4,7 +4,7 @@
     "displayName": "Whitespace Counter",
     "description": "Show a numeric counter between characters",
     "publisher": "pit00",
-    "version": "0.0.62",
+    "version": "1.0.0",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -81,6 +81,12 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable a numeric counter for spaces between characters."
+                },
+                "whitespaceCounter.extra.enable": {
+                    "order": 9,
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show TAB and CR."
                 }
             }
         }
