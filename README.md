@@ -5,7 +5,7 @@ This extension show a numeric counter between characters, including:
 * Multiple Spaces [until 100]
 * Single Space [disabled]
 * EOF
-* CR and TAB check
+* CR, multiple LF and TAB check
 
 ## Extension Settings
 

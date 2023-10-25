@@ -81,11 +81,12 @@ export const activate = (context: vscode.ExtensionContext): void => {
             // for Carriage Return (U+000D)
             const decoCR = vscode.window.createTextEditorDecorationType({
                 before: {
-                    width: "1",
-                    contentText: "←",
+                    width: "0",
+                    contentText: "⬅️",
                     color: color,
-                    backgroundColor: "#80cc4018",
-                    border: "1px solid #80cc40"
+                    // width: "1",
+                    // backgroundColor: "#80cc4018",
+                    // border: "1px solid #80cc40"
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
             });
@@ -96,16 +97,30 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoTab = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "--->",
+                    contentText: "⭾",
+                    // contentText: "--->",
                     color: color,
                 },
-                backgroundColor: "#80cc4018",
-                borderRadius: "3px",
-                border: "1px solid #80cc40",
+                // backgroundColor: "#80cc4018",
+                // borderRadius: "3px",
+                // border: "1px solid #80cc40",
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
             });
             decoTypeMap.set("\u0009", decoTab);
             regexParts.push("\u0009");
+            
+            // for Line Feed (U+000A)
+            const decoLF = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "⬇️",
+                    color: color
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u000A", decoLF);
+            regexParts.push("(?<=\u000A\u0020*)\u000A(?=\u0020*\u000A)");
+            // \s != \u0020
         }
         context.subscriptions.push(...decoTypeMap.values());
     };

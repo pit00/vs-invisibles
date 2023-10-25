@@ -4,7 +4,7 @@
     "displayName": "Whitespace Counter",
     "description": "Show a numeric counter between characters",
     "publisher": "pit00",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "license": "MIT",
     "repository": {
         "type": "git",
