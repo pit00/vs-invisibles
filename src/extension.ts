@@ -82,7 +82,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoCR = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "⬅️",
+                    contentText: "⇦",
                     color: color,
                     // width: "1",
                     // backgroundColor: "#80cc4018",
@@ -113,7 +113,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoLF = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "⬇️",
+                    contentText: "⇩",
                     color: color
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
