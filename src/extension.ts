@@ -1,14 +1,13 @@
 import * as vscode from 'vscode';
 
 export const activate = (context: vscode.ExtensionContext): void => {
-
     const getConfig = () => vscode.workspace.getConfiguration('whitespaceCounter');
-
+    
     const isLanguageEnabled = (languageId: string): boolean => {
         const enabledLanguages = getConfig().get<string[]>("enabledLanguageIds", []);
         return enabledLanguages.length === 0 || enabledLanguages.includes(languageId);
     };
-
+    
     const dispose = (decoType: { dispose(): any }) => {
         const index = context.subscriptions.indexOf(decoType);
         if (index !== -1) {
@@ -16,20 +15,22 @@ export const activate = (context: vscode.ExtensionContext): void => {
         }
         decoType.dispose();
     };
-
+    
     /** Mapping target whitespaces to decoration-types. */
     const decoTypeMap = new Map<string, vscode.TextEditorDecorationType>();
     /** list of whitespace regex parts. */
     const regexParts: string[] = [];
-
+    
     const createResources = (): void => {
         Array.from(decoTypeMap.values()).forEach(it => dispose(it));
         decoTypeMap.clear();
         regexParts.length = 0;
-
+        
         const config = getConfig();
         const color = config.get<string>('color', "rgba(117, 255, 205, 0.38)");
-
+        const colorBorder = config.get<string>('color.border', "#80CC4018");
+        const colorBg = config.get<string>('color.bg', "#80CC40");
+        
         if (config.get<boolean>('space.enable', false)) {
             // for Space (U+0020)
             const decoSpace = vscode.window.createTextEditorDecorationType({
@@ -41,8 +42,38 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
             });
             decoTypeMap.set("\u0020", decoSpace);
-            regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020(?=[^\u0020\t\r\n\f])");
+            // regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020(?=[^\u0020\t\r\n\f])");
+            
+            if(config.get('space.skip') === null){
+                regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020(?=[^\u0020\t\r\n\f])");
+            }
+            else {
+                regexParts.push(`(?<=.{${config.get('space.skip')}})\u0020(?=[^\u0020\t\r\n\f])`);
+            }
         }
+        
+        if (config.get<boolean>('space.border.enable', false)) {
+            // for Space (U+0020)
+            const decoSpace = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "",
+                },
+                borderRadius: "3px",
+                backgroundColor: colorBg,
+                border: `1px solid ${colorBorder}`,
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u0020", decoSpace);
+            
+            if(config.get('space.skip') === null){
+                regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020(?=[^\u0020\t\r\n\f])");
+            }
+            else {
+                regexParts.push(`(?<=.{${config.get('space.skip')}})\u0020(?=[^\u0020\t\r\n\f])`);
+            }
+        }
+        
         if (config.get<boolean>('multiple.enable', false)) {
             let match = "\u0020";
             let deco = "₁";
@@ -65,6 +96,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020{2,}(?=[^\u0020\t\r\n\f])");
             // \S not works... == [^\u0020\t\r\n\f]
         }
+        
         if (config.get<boolean>('eof.enable', true)) {
             // for End of File
             const decoEof = vscode.window.createTextEditorDecorationType({
@@ -77,6 +109,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             });
             decoTypeMap.set("eof", decoEof);
         }
+        
         if (config.get<boolean>('extra.enable', true)) {
             // for Carriage Return (U+000D)
             const decoCR = vscode.window.createTextEditorDecorationType({
@@ -122,10 +155,11 @@ export const activate = (context: vscode.ExtensionContext): void => {
             regexParts.push("(?<=\u000A\u0020*)\u000A(?=\u0020*\u000A)");
             // \s != \u0020
         }
+        
         context.subscriptions.push(...decoTypeMap.values());
     };
     createResources();
-
+    
     const updateDecorations = (editor: vscode.TextEditor): void => {
         const options = Array.from(decoTypeMap.values()).reduce(
             (map, decoType) => map.set(decoType, []),
@@ -162,14 +196,14 @@ export const activate = (context: vscode.ExtensionContext): void => {
 
         options.forEach((decoOptions, decoType) => editor.setDecorations(decoType, decoOptions));
     };
-
+    
     const updateDecorationsIfPossible = (): void => {
         const editor = vscode.window.activeTextEditor;
         if (editor && isLanguageEnabled(editor.document.languageId)) {
             updateDecorations(editor);
         }
     };
-
+    
     let timer: NodeJS.Timer | undefined = undefined;
     const triggerUpdateDecorations = (throttle = false): void => {
         if (timer) {
@@ -184,18 +218,18 @@ export const activate = (context: vscode.ExtensionContext): void => {
         }
     };
     triggerUpdateDecorations();
-
+    
     vscode.window.onDidChangeActiveTextEditor(editor => {
         triggerUpdateDecorations();
     }, null, context.subscriptions);
-
+    
     vscode.workspace.onDidChangeTextDocument(event => {
         const editor = vscode.window.activeTextEditor;
         if (editor && event.document === editor.document) {
             triggerUpdateDecorations(true);
         }
     }, null, context.subscriptions);
-
+    
     vscode.workspace.onDidChangeConfiguration(_ => {
         createResources();
         triggerUpdateDecorations();

@@ -4,7 +4,7 @@
     "displayName": "Whitespace Counter",
     "description": "Show a numeric counter between characters",
     "publisher": "pit00",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -56,20 +56,49 @@
                     "default": "₁",
                     "description": "Text to overlay of spaces."
                 },
-                "whitespaceCounter.eof.enable": {
+                "whitespaceCounter.space.border.enable": {
                     "order": 5,
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enables making spaces border/background visible."
+                },
+                "whitespaceCounter.color.bg": {
+                    "order": 6,
+                    "type": "string",
+                    "default": "#80CC4018",
+                    "description": "Color for space border background.",
+                    "pattern": "^(#[0-9a-fA-F]{6})|(rgb\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*\\))|(rgba\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*[01](\\.\\d+)?\\s*\\))$",
+                    "patternErrorMessage": "Specify the color string in \"#RRGGBB\", \"rgb(R,G,B)\" or \"rgba(R,G,B,A)\" format."
+                },
+                "whitespaceCounter.color.border": {
+                    "order": 7,
+                    "type": "string",
+                    "default": "#80CC40",
+                    "description": "Color for space border.",
+                    "pattern": "^(#[0-9a-fA-F]{6})|(rgb\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*\\))|(rgba\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*[01](\\.\\d+)?\\s*\\))$",
+                    "patternErrorMessage": "Specify the color string in \"#RRGGBB\", \"rgb(R,G,B)\" or \"rgba(R,G,B,A)\" format."
+                },
+                "whitespaceCounter.space.skip": {
+                    "order": 8,
+                    "type": ["integer", "null"],
+                    "default": null,
+                    "minimum": 1,
+                    "description": "Skip first N characters for single space case. Default is null (skip none)"
+                },
+                "whitespaceCounter.eof.enable": {
+                    "order": 9,
                     "type": "boolean",
                     "default": true,
                     "description": "Enables making EOF visible."
                 },
                 "whitespaceCounter.eof.text": {
-                    "order": 6,
+                    "order": 10,
                     "type": "string",
                     "default": "⛶",
                     "description": "Text of EOF."
                 },
                 "whitespaceCounter.eof.color": {
-                    "order": 7,
+                    "order": 11,
                     "type": "string",
                     "default": "rgba(117, 255, 205, 0.38)",
                     "description": "Color string (hex, rgba, rgb) for EOF.",
@@ -77,13 +106,13 @@
                     "patternErrorMessage": "Specify the color string in \"#RRGGBB\", \"rgb(R,G,B)\" or \"rgba(R,G,B,A)\" format."
                 },
                 "whitespaceCounter.multiple.enable": {
-                    "order": 8,
+                    "order": 12,
                     "type": "boolean",
                     "default": true,
                     "description": "Enable a numeric counter for spaces between characters."
                 },
                 "whitespaceCounter.extra.enable": {
-                    "order": 9,
+                    "order": 13,
                     "type": "boolean",
                     "default": true,
                     "description": "Show TAB and CR."
