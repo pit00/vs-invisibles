@@ -20,6 +20,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
     const decoTypeMap = new Map<string, vscode.TextEditorDecorationType>();
     /** list of whitespace regex parts. */
     const regexParts: string[] = [];
+    let regexWrap: RegExp;
     
     const createResources = (): void => {
         Array.from(decoTypeMap.values()).forEach(it => dispose(it));
@@ -110,6 +111,23 @@ export const activate = (context: vscode.ExtensionContext): void => {
             decoTypeMap.set("eof", decoEof);
         }
         
+        if (config.get<boolean>('wrap.enable', true)) {
+            // for Wrapped Lines
+            const decoWrap = vscode.window.createTextEditorDecorationType({
+                backgroundColor: config.get<string>('wrap.color', "#80CC4018")
+                // textDecoration: "wavy underline var(--vscode-editorWarning-foreground)",
+                // after: {
+                //     // We need a single invisible character in the 'after' area to expand the div height.
+                //     contentText: "‎",
+                //     backgroundColor: color,
+                //     height: "100%",
+                // }
+            });
+            decoTypeMap.set("wrap", decoWrap);
+            regexWrap = new RegExp(`(?<=.{${config.get('wrap.start')}}).+`, "g");
+            // console.log(regexWrap);
+        }
+
         if (config.get<boolean>('extra.enable', true)) {
             // for Carriage Return (U+000D)
             const decoCR = vscode.window.createTextEditorDecorationType({
@@ -163,7 +181,8 @@ export const activate = (context: vscode.ExtensionContext): void => {
     const updateDecorations = (editor: vscode.TextEditor): void => {
         const options = Array.from(decoTypeMap.values()).reduce(
             (map, decoType) => map.set(decoType, []),
-            new Map<vscode.TextEditorDecorationType, vscode.DecorationOptions[]>());
+            new Map<vscode.TextEditorDecorationType, vscode.DecorationOptions[]>()
+        );
         const text = editor.document.getText();
         const regex = new RegExp(regexParts.join("|"), "mg");
         const decoOther = decoTypeMap.get("other");
@@ -192,6 +211,22 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const eofPosition = editor.document.positionAt(text.length);
             const range = new vscode.Range(eofPosition, eofPosition);
             options.get(decoEof)?.push({ range });
+        }
+        
+        // const decoWrap = decoTypeMap.get("wrap");
+        if(regexWrap){
+            Array.from(text.matchAll(regexWrap)).forEach(match => {
+                const startPos = match.index!;
+                const target = match[0];
+                const range = new vscode.Range(
+                    editor.document.positionAt(startPos),
+                    editor.document.positionAt(startPos + target.length)
+                );
+                const decoType = decoTypeMap.get("wrap");
+                if (decoType) {
+                    options.get(decoType)?.push({ range });
+                }
+            });
         }
 
         options.forEach((decoOptions, decoType) => editor.setDecorations(decoType, decoOptions));

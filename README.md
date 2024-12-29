@@ -13,7 +13,7 @@ This extension show a numeric counter between characters, including:
 * `whitespaceCounter.enabledLanguageIds`: A list of languageIds to be enabled. If empty, it will be enabled for all languageIds. e.g. `[ "plaintext", "markdown" ]`
 * `whitespaceCounter.updateDelay`: Delay time in milliseconds before updating. Smaller values will color faster, but will increase processing cost
 * `whitespaceCounter.color`: for the general color. (default is `rgba(117, 255, 205, 0.38)`)
-* `whitespaceCounter.space.enable`: for single spaces
+* `whitespaceCounter.space.enable`: for single spaces (disabled by default)
 * `whitespaceCounter.space.text`: text for single spaces (default is `₁`)
 * `whitespaceCounter.space.border.enable`: Enables making spaces border/background visible.
 * `whitespaceCounter.color.border`: color for space border. (default is `#80CC40`)
@@ -24,3 +24,10 @@ This extension show a numeric counter between characters, including:
 * `whitespaceCounter.eof.text`: text for EOF (default is `⛶`)
 * `whitespaceCounter.eof.color`: for the EOF color. (default is `rgba(117, 255, 205, 0.38)`)
 * `whitespaceCounter.extra.enable`: show TAB and CR
+* `whitespaceCounter.wrap.enable`: background match given a starting column until end of the line, to use with wrap word / wrapped lines (disabled by default)
+* `whitespaceCounter.wrap.start`: strating column number (default is `80`)
+* `whitespaceCounter.wrap.color`: color for wrap background (default is `#80CC4018`)
+
+<!-- TODO
+use `wrap` only when word wrap is enable option
+-->
