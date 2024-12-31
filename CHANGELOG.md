@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.3.0
+
+``` diff
++ [wrap.enable] Background match for wrapped lines.
++ [wrap.start] Wrap background strating column number.
++ [wrap.color] Color for space border background.
+```
+
 ## 1.2.0
 
 ``` diff

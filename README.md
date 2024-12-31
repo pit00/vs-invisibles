@@ -29,5 +29,6 @@ This extension show a numeric counter between characters, including:
 * `whitespaceCounter.wrap.color`: color for wrap background (default is `#80CC4018`)
 
 <!-- TODO
-use `wrap` only when word wrap is enable option
+* use `wrap` only when word wrap is enable option
+* sshots
 -->
