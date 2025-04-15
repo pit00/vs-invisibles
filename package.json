@@ -4,7 +4,7 @@
     "displayName": "Whitespace Counter",
     "description": "Show a numeric counter between characters",
     "publisher": "pit00",
-    "version": "1.3.0",
+    "version": "1.3.8",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -111,26 +111,44 @@
                     "default": true,
                     "description": "Enable a numeric counter for spaces between characters."
                 },
-                "whitespaceCounter.extra.enable": {
+                "whitespaceCounter.crlf.enable": {
                     "order": 13,
                     "type": "boolean",
                     "default": true,
-                    "description": "Show TAB and CR."
+                    "description": "Show CRLF."
+                },
+                "whitespaceCounter.lf.enable": {
+                    "order": 14,
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Show LF."
+                },
+                "whitespaceCounter.multLine.enable": {
+                    "order": 15,
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show CR/LF on blank lines (above 1)."
+                },
+                "whitespaceCounter.tab.enable": {
+                    "order": 16,
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show TAB."
                 },
                 "whitespaceCounter.wrap.enable": {
-                    "order": 14,
+                    "order": 17,
                     "type": "boolean",
                     "default": false,
                     "description": "Background match for wrapped lines."
                 },
                 "whitespaceCounter.wrap.start": {
-                    "order": 15,
+                    "order": 18,
                     "type": "integer",
                     "default": 80,
                     "description": "Wrap background strating column number."
                 },
                 "whitespaceCounter.wrap.color": {
-                    "order": 16,
+                    "order": 19,
                     "default": "#80CC4018",
                     "description": "Color for space border background.",
                     "pattern": "^(#[0-9a-fA-F]{6})|(rgb\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*\\))|(rgba\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*[01](\\.\\d+)?\\s*\\))$",

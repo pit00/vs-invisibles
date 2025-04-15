@@ -111,7 +111,10 @@ export const activate = (context: vscode.ExtensionContext): void => {
             decoTypeMap.set("eof", decoEof);
         }
         
+        // const wordWrap = vscode.workspace.getConfiguration('editor').get<string>('wordWrap', 'off');
+        // if(wordWrap !== 'off')
         if (config.get<boolean>('wrap.enable', true)) {
+            
             // for Wrapped Lines
             const decoWrap = vscode.window.createTextEditorDecorationType({
                 backgroundColor: config.get<string>('wrap.color', "#80CC4018")
@@ -127,13 +130,13 @@ export const activate = (context: vscode.ExtensionContext): void => {
             regexWrap = new RegExp(`(?<=.{${config.get('wrap.start')}}).+`, "g");
             // console.log(regexWrap);
         }
-
-        if (config.get<boolean>('extra.enable', true)) {
+        
+        if (config.get<boolean>('crlf.enable', true)) {
             // for Carriage Return (U+000D)
-            const decoCR = vscode.window.createTextEditorDecorationType({
+            const decoCRLF = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "⇦",
+                    contentText: "␍␊", // ⇦
                     color: color,
                     // width: "1",
                     // backgroundColor: "#80cc4018",
@@ -141,9 +144,65 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
             });
-            decoTypeMap.set("\u000d", decoCR);
-            regexParts.push("\u000d");
+            decoTypeMap.set("\u000D\u000A", decoCRLF);
+            regexParts.push("\u000D\u000A");
+        }
+        
+        if (config.get<boolean>('lf.enable', false)) {
+            // for Line Feed (U+000A)
+            const decoLF = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "␊", // ⇩
+                    color: color
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u000A", decoLF);
+            regexParts.push("\u000A");
+        }
+        
+        if (config.get<boolean>('multLine.enable', true)) {
+            // "whitespaceCounter.multLine.langNumb": {
+            //     "order": 16,
+            //     "type": "object",
+            //     "default": {
+            //         "default": 2,
+            //         "python": 3
+            //     },
+            //     "description": "Number of blank lines per language."
+            // },
+            // const languageId = vscode.window.activeTextEditor?.document.languageId || 'default';
+            // const multLineNumber = config.get<{ [key: string]: number }>('multLine.langNumb', {});
+            // const blankLines = multLineNumber[languageId] ?? multLineNumber['default'] ?? 2;
             
+            // for mult Line Feed (U+000A)
+            const decoMultCR = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "␍␊", // ⇦
+                    color: color
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u000D\u000A", decoMultCR);
+            regexParts.push("(?<=\u000D\u000A\u0020*)\u000D\u000A(?=\u0020*\u000D\u000A)");
+            
+            // for mult Line Feed (U+000A)
+            const decoMultLF = vscode.window.createTextEditorDecorationType({
+                before: {
+                    width: "0",
+                    contentText: "␊", // ⇩
+                    color: color
+                },
+                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+            });
+            decoTypeMap.set("\u000A", decoMultLF);
+            regexParts.push("(?<=\u000A\u0020*)\u000A(?=\u0020*\u000A)");
+            // \s != \u0020
+        }
+        
+        if (config.get<boolean>('tab.enable', true)) {
             // for Horizontal Tabulation (U+0009)
             const decoTab = vscode.window.createTextEditorDecorationType({
                 before: {
@@ -159,19 +218,6 @@ export const activate = (context: vscode.ExtensionContext): void => {
             });
             decoTypeMap.set("\u0009", decoTab);
             regexParts.push("\u0009");
-            
-            // for Line Feed (U+000A)
-            const decoLF = vscode.window.createTextEditorDecorationType({
-                before: {
-                    width: "0",
-                    contentText: "⇩",
-                    color: color
-                },
-                rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-            });
-            decoTypeMap.set("\u000A", decoLF);
-            regexParts.push("(?<=\u000A\u0020*)\u000A(?=\u0020*\u000A)");
-            // \s != \u0020
         }
         
         context.subscriptions.push(...decoTypeMap.values());
@@ -205,7 +251,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 });
             }
         });
-
+        
         const decoEof = decoTypeMap.get("eof");
         if (decoEof) {
             const eofPosition = editor.document.positionAt(text.length);

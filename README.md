@@ -23,12 +23,16 @@ This extension show a numeric counter between characters, including:
 * `whitespaceCounter.eof.enable`: for EOF symbol.
 * `whitespaceCounter.eof.text`: text for EOF (default is `⛶`)
 * `whitespaceCounter.eof.color`: for the EOF color. (default is `rgba(117, 255, 205, 0.38)`)
-* `whitespaceCounter.extra.enable`: show TAB and CR
+* `whitespaceCounter.crlf.enable`: show CRLF
+* `whitespaceCounter.lf.enable`: show LF
+* `whitespaceCounter.multLine.enable`: show CR/LF on blank lines
+* `whitespaceCounter.tab.enable`: show TAB
 * `whitespaceCounter.wrap.enable`: background match given a starting column until end of the line, to use with wrap word / wrapped lines (disabled by default)
 * `whitespaceCounter.wrap.start`: strating column number (default is `80`)
 * `whitespaceCounter.wrap.color`: color for wrap background (default is `#80CC4018`)
 
 <!-- TODO
 * use `wrap` only when word wrap is enable option
+* multline per language (refresh on file change)
 * sshots
 -->
