@@ -133,12 +133,14 @@ export const activate = (context: vscode.ExtensionContext): void => {
         
         if (config.get<boolean>('crlf.enable', true)) {
             // for Carriage Return (U+000D)
+            let multCR = config.get<string>('crlf.text', "")
+            if (!multCR)
+                multCR = config.get<string>('cr.text', "␍") + config.get<string>('lf.text', "␊")
             const decoCRLF = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "␍␊", // ⇦
+                    contentText: multCR, // ⇩⇦ | ⏎
                     color: color,
-                    // width: "1",
                     // backgroundColor: "#80cc4018",
                     // border: "1px solid #80cc40"
                 },
@@ -153,7 +155,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoLF = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "␊", // ⇩
+                    contentText: config.get<string>('lf.text', "␊"),
                     color: color
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
@@ -175,12 +177,14 @@ export const activate = (context: vscode.ExtensionContext): void => {
             // const languageId = vscode.window.activeTextEditor?.document.languageId || 'default';
             // const multLineNumber = config.get<{ [key: string]: number }>('multLine.langNumb', {});
             // const blankLines = multLineNumber[languageId] ?? multLineNumber['default'] ?? 2;
-            
+            let multCR = config.get<string>('crlf.text', "")
+            if (!multCR)
+                multCR = config.get<string>('cr.text', "␍") + config.get<string>('lf.text', "␊")
             // for mult Line Feed (U+000A)
             const decoMultCR = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "␍␊", // ⇦
+                    contentText: multCR,
                     color: color
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
@@ -192,7 +196,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoMultLF = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "␊", // ⇩
+                    contentText: config.get<string>('lf.text', "␊"),
                     color: color
                 },
                 rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
@@ -207,8 +211,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
             const decoTab = vscode.window.createTextEditorDecorationType({
                 before: {
                     width: "0",
-                    contentText: "⭾",
-                    // contentText: "--->",
+                    contentText: "⭾", // "--->"
                     color: color,
                 },
                 // backgroundColor: "#80cc4018",
