@@ -1,10 +1,10 @@
 {
-    "name": "whitespace-counter",
+    "name": "whitespace-counters",
     "icon": "assets/icon.png",
-    "displayName": "Whitespace Counter",
-    "description": "Show a numeric counter between characters",
+    "displayName": "Whitespace Counters",
+    "description": "A bunch of whitespace decorators options",
     "publisher": "pit00",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "license": "MIT",
     "repository": {
         "type": "git",
