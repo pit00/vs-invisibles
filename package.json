@@ -4,7 +4,7 @@
     "displayName": "Whitespace Counters",
     "description": "A bunch of whitespace decorators options",
     "publisher": "pit00",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -36,7 +36,7 @@
                     "default": 100,
                     "description": "Delay time in milliseconds before updating."
                 },
-                "whitespaceCounter.color": {
+                "whitespaceCounter.color.general": {
                     "order": 2,
                     "type": "string",
                     "default": "rgba(117, 255, 205, 0.38)",
@@ -139,7 +139,7 @@
                     "order": 17,
                     "type": ["bool", "string"],
                     "default": false,
-                    "description": "Optional, if false, CRLF will be a concat of cr.text + lf.text"
+                    "description": "Optional, if false, CRLF will be a concat of cr.text + lf.text."
                 },
                 "whitespaceCounter.multLine.enable": {
                     "order": 18,
@@ -171,6 +171,11 @@
                     "description": "Color for space border background.",
                     "pattern": "^(#[0-9a-fA-F]{6})|(rgb\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*\\))|(rgba\\(\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\s*,\\s*[01](\\.\\d+)?\\s*\\))$",
                     "patternErrorMessage": "Specify the color string in \"#RRGGBB\", \"rgb(R,G,B)\" or \"rgba(R,G,B,A)\" format."
+                },
+                "whitespaceCounter.zeros.enable": {
+                    "order": 23,
+                    "default": false,
+                    "description": "Zeros counter boolean."
                 }
             }
         }

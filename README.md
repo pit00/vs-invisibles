@@ -2,11 +2,12 @@
 
 This extension show a numeric counter between characters, including:
 
-* Multiple Spaces [until 100]
+* Multiple Spaces [until 20]
 * Single Space [disabled]
 * Single Space Border/Background [disabled]
 * EOF
 * CR, multiple LF and TAB check
+* Zero Counter [5 to 15]
 
 ## Extension Settings
 
@@ -30,6 +31,7 @@ This extension show a numeric counter between characters, including:
 * `whitespaceCounter.wrap.enable`: background match given a starting column until end of the line, to use with wrap word / wrapped lines (disabled by default)
 * `whitespaceCounter.wrap.start`: strating column number (default is `80`)
 * `whitespaceCounter.wrap.color`: color for wrap background (default is `#80CC4018`)
+* `whitespaceCounter.zeros.enable`: counter for zeros
 
 <!-- TODO
 * use `wrap` only when word wrap is enable option

@@ -28,7 +28,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
         regexParts.length = 0;
         
         const config = getConfig();
-        const color = config.get<string>('color', "rgba(117, 255, 205, 0.38)");
+        const color = config.get<string>('color.general', "rgba(117, 255, 205, 0.38)");
         const colorBorder = config.get<string>('color.border', "#80CC4018");
         const colorBg = config.get<string>('color.bg', "#80CC40");
         
@@ -75,13 +75,48 @@ export const activate = (context: vscode.ExtensionContext): void => {
             }
         }
         
+        if (config.get<boolean>('zeros.enable', true)) {
+            let match = "0000";
+            let deco = 4;
+            // let unity = "ᴷ";
+            let decoDigits = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰"];
+            let out;
+            
+            for (let index = 5; index <= 15; index++) {
+                // console.log(index)
+                match = match + "0";
+                deco = deco + 1;
+                
+                out = deco.toString().split("").map(d => decoDigits[Number(d)]).join("");
+                
+                // if (index > 12) {
+                //     unity = "ᵀ";
+                // }
+                // else if (index > 9) {
+                //     unity = "ᴮ";
+                // }
+                // else if (index > 6) {
+                //     unity = "ᴹ";
+                // }
+                
+                decoTypeMap.set(match, vscode.window.createTextEditorDecorationType({
+                    after: {
+                        color: color,
+                        // contentText: out + unity
+                        contentText: out
+                    }
+                }))
+            }
+            regexParts.push("0{4,}\\b"); // operators must be scaped
+        }
+        
         if (config.get<boolean>('multiple.enable', false)) {
             let match = "\u0020";
             let deco = "₁";
             let decoN = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];
             let decoD = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰"];
             
-            for (let index = 2; index <= 100; index++) {
+            for (let index = 2; index <= 20; index++) { // 100
                 // console.log(index)
                 match = match + "\u0020";
                 
@@ -92,7 +127,14 @@ export const activate = (context: vscode.ExtensionContext): void => {
                     deco = deco + decoN[index % 10]
                 }
                 
-                decoTypeMap.set(match, vscode.window.createTextEditorDecorationType({rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed, before: {width: "0", color: color, contentText: deco}}))
+                decoTypeMap.set(match, vscode.window.createTextEditorDecorationType({
+                    rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+                    before: {
+                        width: "0",
+                        color: color,
+                        contentText: deco
+                    }
+                }))
             }
             regexParts.push("(?<=[^\u0020\t\r\n\f])\u0020{2,}(?=[^\u0020\t\r\n\f])");
             // \S not works... == [^\u0020\t\r\n\f]
@@ -114,7 +156,6 @@ export const activate = (context: vscode.ExtensionContext): void => {
         // const wordWrap = vscode.workspace.getConfiguration('editor').get<string>('wordWrap', 'off');
         // if(wordWrap !== 'off')
         if (config.get<boolean>('wrap.enable', true)) {
-            
             // for Wrapped Lines
             const decoWrap = vscode.window.createTextEditorDecorationType({
                 backgroundColor: config.get<string>('wrap.color', "#80CC4018")
@@ -277,7 +318,7 @@ export const activate = (context: vscode.ExtensionContext): void => {
                 }
             });
         }
-
+        
         options.forEach((decoOptions, decoType) => editor.setDecorations(decoType, decoOptions));
     };
     

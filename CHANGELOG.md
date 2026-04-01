@@ -16,3 +16,10 @@
 + [color.border] Color for space border.
 + [space.skip] Skip first N characters for single space case. Default is null (skip none)
 ```
+
+## 1.5.0
+
+``` diff
++ change some default settings
++ [zeros.enable] Added
+```
